@@ -19,21 +19,27 @@ use App\Http\Controllers\StatusController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/', function(){
+        return redirect()->route('home');
+    });
+
     Route::get('/newsfeed', [StatusController::class, 'newsfeedStatus'])->name('newsfeed');
     Route::get('/user/profile', [UserProfileController::class, 'showProfile'])->name('showProfile');
     Route::post('/post_status', [StatusController::class, 'postStatus'])->name('postStatus');
 
     Route::get('/profile/edit', [UserProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [UserProfileController::class, 'update'])->name('profile.update');
+
+
+
+    Route::post('/react/{status}', [StatusController::class, 'postReact'])->name('react_status');
+
+
 
 });

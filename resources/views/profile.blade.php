@@ -29,23 +29,39 @@
             </div>
             <!-- User Posts -->
                         <!-- Statuses -->
-            @foreach ($statuses as $status)
+            @if($statuses->isEmpty())
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">{{ $status->user->name }}</h5>
-                        <p class="card-text">{{ $status->body }}</p>
+                        <p>No status shared yet</p>
                     </div>
                 </div>
-            @endforeach
-                <!-- Load more button -->
-            @if ($statuses->hasMorePages())
-                <div class="d-flex justify-content-center">
-                    <div class="mt-3">
-                        <a href="{{ $statuses->nextPageUrl() }}" class="btn btn-primary">Load More</a>
-                    </div>
-                </div>
-            @endif
 
+            @else 
+                @foreach ($statuses as $status)
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="{{ asset('profile_pictures/'.$status->user->profile_picture) }}" class="rounded-circle" width="50" height="50">
+                                <h5 class="card-title"> &nbsp;&nbsp;&nbsp;{{ $status->user->name }}</h5>
+                                <br>
+                                <br>
+                            </div>
+                            <p class="card-text">{{ $status->body }}</p>
+
+                            <small class="text-muted">{{ $status->created_at->format('H:i d/m/Y') }}</small>
+                        </div>
+                    </div>
+                @endforeach
+                    <!-- Load more button -->
+                @if ($statuses->hasMorePages())
+                    <div class="d-flex justify-content-center">
+                        <div class="mt-3">
+                            <a href="{{ $statuses->nextPageUrl() }}" class="btn btn-primary">Load More</a>
+                        </div>
+                    </div>
+                @endif
+
+            @endif
         </div>
     </div>
 </div>

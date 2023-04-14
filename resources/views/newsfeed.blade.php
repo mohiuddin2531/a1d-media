@@ -1,6 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+<head>
+    <link rel="stylesheet" href="{{ asset('css/newsfeedStyle.css') }}">
+</head>
+
 <div class="container">
     <div class="row">
         <div class="col-md-3">
@@ -35,15 +39,39 @@
                 </div>
             </div>
 
-                        <!-- Statuses -->
+
             @foreach ($statuses as $status)
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title">{{ $status->user->name }}</h5>
+                        <div class="d-flex align-items-center">
+                            <img src="{{ asset('profile_pictures/'.$status->user->profile_picture) }}" class="rounded-circle" width="50" height="50">
+                            <h5 class="card-title"> &nbsp;&nbsp;&nbsp;{{ $status->user->name }}</h5>
+                            <br>
+                            <br>
+                        </div>
+
+                        
                         <p class="card-text">{{ $status->body }}</p>
+
+                        <!-- <small class="text-muted">{{ $status->created_at->diffForHumans() }}</small> -->
+                        <small class="text-muted">{{ $status->created_at->format('H:i d/m/Y') }}</small>
+                        <form method="post" action="{{ route('react_status', $status->status_id) }}">
+                            @csrf
+                            @php $user_react = $user_reactions->get($status->id) @endphp
+                            <button type="submit" name="reaction" value="like" class="btn btn-outline-primary">Like</button>
+                            <button type="submit" name="reaction" value="love" class="btn btn-outline-primary">Love</button>
+                            <button type="submit" name="reaction" value="haha" class="btn btn-outline-primary">Haha</button>
+                            <button type="submit" name="reaction" value="wow" class="btn btn-outline-primary">Wow</button>
+                            <button type="submit" name="reaction" value="sad" class="btn btn-outline-primary">Sad</button>
+                            <button type="submit" name="reaction" value="angry" class="btn btn-outline-primary">Angry</button>
+                        </form>
                     </div>
                 </div>
             @endforeach
+
+
+
+
                 <!-- Load more button -->
             @if ($statuses->hasMorePages())
                 <div class="d-flex justify-content-center">
