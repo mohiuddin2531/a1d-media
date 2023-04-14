@@ -37,10 +37,16 @@ class UserProfileController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'profile_picture' => ['nullable', 'image', 'max:2048'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'password_confirmation.confirmed' => 'The password confirmation does not match.',
         ]);
 
         $user->name = $validatedData['name'];
         $user->email = $validatedData['email'];
+
+        if ($validatedData['password']) {
+            $user->password = bcrypt($validatedData['password']);
+        }
 
         if ($request->hasFile('profile_picture')) {
             $file = $request->file('profile_picture');
